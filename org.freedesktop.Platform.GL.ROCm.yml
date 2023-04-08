@@ -47,6 +47,9 @@ modules:
       - -DLLVM_INCLUDE_BENCHMARKS=OFF 
       - -DLLVM_ENABLE_OCAMLDOC=OFF 
       - -DLLVM_ENABLE_BINDINGS=OFF
+    build-options:
+      arch:
+        x86_64: *x86_64-build-options
     sources:
       - type: archive
         url: https://github.com/RadeonOpenCompute/llvm-project/archive/rocm-5.4.3.tar.gz
