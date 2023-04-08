@@ -1,0 +1,53 @@
+id: org.freedesktop.Platform.GL.ROCm
+branch: '22.08'
+runtime: org.freedesktop.Platform
+sdk: org.freedesktop.Sdk
+runtime-version: '22.08'
+build-extension: true
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.llvm15
+build-options:
+  prepend-path: /usr/lib/sdk/llvm15/bin
+  prepend-ld-library-path: /usr/lib/sdk/llvm15/lib
+x-arch-build-options:
+  x86_64: &x86_64-build-options
+    prefix: /usr/lib/x86_64-linux-gnu/GL/ROCm
+    prepend-pkg-config-path: /usr/lib/x86_64-linux-gnu/GL/ROCm/lib/pkgconfig
+    libdir: /usr/lib/x86_64-linux-gnu/GL/ROCm/lib
+  i386: &i386-build-options
+    prefix: /usr/lib/i386-linux-gnu/GL/ROCm
+    prepend-pkg-config-path: /usr/lib/i386-linux-gnu/GL/ROCm/lib/pkgconfig
+    libdir: /usr/lib/i386-linux-gnu/GL/ROCm/lib
+
+modules:
+  - name: rocm-cmake
+    buildsystem: cmake
+    build-options:
+      arch:
+        x86_64: *x86_64-build-options
+    sources:
+      - type: archive
+        url: https://github.com/RadeonOpenCompute/rocm-cmake/archive/refs/tags/rocm-5.4.3.tar.gz
+        sha256: c185b3a10d191d73b76770ca0f9d6bdc355ee91fe0c9016a3779c9cfe042ba0f 
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=MinSizeRel
+
+  - name: rocm-llvm
+    buildsystem: cmake-ninja
+    subdir: llvm
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=MinSizeRel
+      - -DLLVM_TARGETS_TO_BUILD='AMDGPU;X86'
+      - -DLLVM_INCLUDE_TESTS=OFF 
+      - -DLLVM_INCLUDE_EXAMPLES=OFF 
+      - -DLLVM_INCLUDE_DOCS=OFF 
+      - -DLLVM_ENABLE_DOXYGEN=OFF
+      - -DLLVM_INSTALL_TOOLCHAIN_ONLY=OFF 
+      - -DLLVM_INCLUDE_BENCHMARKS=OFF 
+      - -DLLVM_ENABLE_OCAMLDOC=OFF 
+      - -DLLVM_ENABLE_BINDINGS=OFF
+    sources:
+      - type: archive
+        url: https://github.com/RadeonOpenCompute/llvm-project/archive/rocm-5.4.3.tar.gz
+        sha256: a844d3cc01613f6284a75d44db67c495ac1e9b600eacbb1eb13d2649f5d5404d
