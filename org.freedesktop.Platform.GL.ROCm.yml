@@ -19,6 +19,10 @@ x-arch-build-options:
     prepend-pkg-config-path: /usr/lib/i386-linux-gnu/GL/ROCm/lib/pkgconfig
     libdir: /usr/lib/i386-linux-gnu/GL/ROCm/lib
 
+cleanup: 
+  - '*.a'
+  - '*.la'
+
 modules:
   - name: rocm-cmake
     buildsystem: cmake
